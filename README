@@ -1,0 +1,40 @@
+
+=== STATUS ===
+
+[x] Create OmniGraffle diagram from Django models code
+[ ] Update OmniGraffle diagram from Django models code
+[ ] Create Django models code from OmniGraffle diagram
+[ ] Update Django models code from OmbniGraffle diagram
+
+=== DEPENDENCIES ===
+
+  OmniGraffle
+  www.omnigroup.com/applications/omnigraffle/
+  -> Mac-only software
+  -> requires OmniGraffle
+  -> requires appscript, python library for AppleScript
+    sudo easy_install appscript
+
+=== RUN ===
+
+python main.py
+
+OmniGraffle diagram has no layout: objects are on top of each other.
+Use "automatic layout" for initial positioning, then manually reposition
+as necessary.
+
+=== TODO ===
+
+[ ] Add fields to diagram nodes
+
+If requested:
+
+[ ] Remove diN0-specific Django dependencies so people without sweet
+Django setups can still use this off the shelf....once someone not me
+wants to use this, that is :-)
+
+[ ] GUI interface
+
+[ ] other diagram formats
+
+[ ] other code formats?
