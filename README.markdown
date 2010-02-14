@@ -69,16 +69,18 @@
 ## DEPENDENCIES
 
 OmniGraffle
-* [http://www.omnigroup.com/applications/omnigraffle/](http://www.omnigroup.com/applications/omnigraffle/)
-* Mac-only software
-* requires OmniGraffle
-* requires appscript, python library for AppleScript
-* [http://appscript.sourceforge.net/py-appscript/doc/](http://appscript.sourceforge.net/py-appscript/doc/)
+
+*   [http://www.omnigroup.com/applications/omnigraffle/](http://www.omnigroup.com/applications/omnigraffle/)
+*   Mac-only software
+*   requires OmniGraffle
+*   requires appscript, python library for AppleScript
+*   [http://appscript.sourceforge.net/py-appscript/doc/](http://appscript.sourceforge.net/py-appscript/doc/)
 
     sudo easy_install appscript
 
 Django
-* [http://djangoproject.com](http://djangoproject.com)
+
+ * [http://djangoproject.com](http://djangoproject.com)
 
 ## RUN
 
