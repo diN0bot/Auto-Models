@@ -75,7 +75,23 @@ class DjangoModelInterface(object):
                 fn(obj_dict, model)
     
     @classmethod
+    def print_classes(klass, aobjects, filename=None):
+        """
+        Convenience function for printing create_classes 
+        """
+        lines = klass.create_classes(aobjects, filename)
+        if filename:
+            f = open(filename)
+            f.write("\n".join(lines))
+            f.close()
+        else:
+            print "\n".join(lines)
+    
+    @classmethod
     def create_classes(klass, aobjects, filename=None):
+        """
+        @return: list of strings representing lines of code
+        """
         lines = []
         for aobject in aobjects:
             lines.append("class %s(models.Model):" % aobject.name)
@@ -92,13 +108,7 @@ class DjangoModelInterface(object):
             
             # ToDo: print __unicode__ and Make methods, also class docs (OG notes?)
             # more default fields? what to express in omni graffle, visually v notes
-        
-        if filename:
-            f = open(filename)
-            f.write("\n".join(lines))
-            f.close()
-        else:
-            print "\n".join(lines)
+        return lines
 
     @classmethod
     def pretty_print(klass, aobjects):

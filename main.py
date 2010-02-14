@@ -45,13 +45,22 @@ Please provide comma-separated list of Django apps:
             exit(1)
     
     aobjects = DjangoModelInterface.load_aobjects(apps)
+    print "\nSuccessfully loaded Django models into internal format"
     #DjangoModelInterface.pretty_print(aobjects)
     
     ogi = OmniGraffleInterface()
     ogi.create_graffle(aobjects)
+    print "\nSuccessfully created OmniGraffle diagram from internal format"
     
-    # not yet written
+    #print '-'*20, "expected models", '-'*20
+    #expected_code = DjangoModelInterface.create_classes(aobjects)
+    #DjangoModelInterface.print_classes(aobjects)
+    #print '-'*60
+    
     aobjects2 = ogi.load_aobjects()
-    
-    DjangoModelInterface.create_classes(aobjects)
+    print "\nSuccessfully loaded OmniGraffle back into internal format"
+    print "\nWriting Django code from format:\n"
+    DjangoModelInterface.print_classes(aobjects2)
+    #print '-'*20, "actual models", '-'*20
+    #actual_code = DjangoModelInterface.create_classes(aobjects2)
     

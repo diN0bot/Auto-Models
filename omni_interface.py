@@ -75,16 +75,60 @@ class OmniGraffleInterface(object):
     
     def load_aobjects(self, filename=None):
         """
+        Loads OmniGraffle file into AObjects
+        1. Iterate over groups to construct AObjects with dest-less fields
+        2. Iterate over AObjects, reconstruct field types and dest links as appropriate
         
+        @return: list of AObjects
         """
-        ret = []
-        
         if filename:
             self.og.open(filename)
         main_doc = self.og.windows.first.get()
-        # todo
         
-        return ret
+        # group -> AObject
+        group_aobj_dict = {}
+        
+        #### 1. Construct AObject for each graphic
+        for group in main_doc.groups.get():
+            n0 = group.graphics.get()[0]
+            n1 = group.graphics.get()[1]
+            if ':' in n0.text.get():
+                fields = n0
+                name = n1
+            else:
+                fields = n1
+                name = n0
+            
+            # retrieve AObject name
+            ao = AObject(name.text.get())
+            # retrieve AObject fields
+            for fullfield in fields.text.get().split('\n'):
+                name = fullfield.split(':')[0].strip()
+                type = fullfield.split(':')[1].strip()
+        
+                if type[:-1] == 'F':       # CharF, IntegerF
+                    type = "%sield" % type # CharField, IntegerField
+                # do this in second pass
+                #elif type[:2] == '->':
+                #    type = "ForeignKey"
+                #    dest = AObject with name == type[2:]
+                ao.add_field(name=name, type=type)
+                group_aobj_dict[group] = ao
+        
+        #### 2. Recreate AField destination links
+        for group, ao in group_aobj_dict.items():
+            for field in ao.fields:
+                if field.type[:2] == '->':
+                    dest_name = field.type[2:]
+                    # find destination AObject
+                    for line in group.outgoing_lines.get():
+                        dest_ao = group_aobj_dict[line.destination.get()]
+                        # check if this is the right line for the field type
+                        if dest_ao.name == dest_name:
+                            field.dest = dest_ao
+                    field.type = 'ForeignKey'
+                
+        return group_aobj_dict.values()
     
     def _write_node(self, document, aobject):
         """
@@ -100,9 +144,17 @@ class OmniGraffleInterface(object):
                                #at=document.graphics.first, 
                                with_properties=properties)
         
-        field_names = ["%s: %s" % (f.name,
-                                   f.type[:-5] == 'Field' and f.type[:-5]+'F' or f.type) \
-                                   for f in aobject.fields]
+        field_names = []
+        for f in aobject.fields:
+            # this needs to be reversible
+            if f.type[:-5] == 'Field': # CharField, IntegerField
+                type = f.type[:-4]     # CharF, IntegerF
+            elif f.type == 'ForeignKey' and f.dest: # ForeignKey (to AObject named User)
+                type = "->%s" % f.dest.name         # eg ->User, ->Post
+            else:
+                type = f.type
+            field_names.append("%s: %s" % (f.name, type))
+        #field_names = ["%s: %s" % (f.name, type) for f in aobject.fields]
         properties = {appscript.k.text: '\n'.join(field_names),
                       appscript.k.autosizing: appscript.k.full,
                       appscript.k.draws_shadow: True}

@@ -35,7 +35,7 @@
 
 <img src="http://github.com/diN0bot/Auto-Models/raw/master/screenshot.png" width="35%" />
 
-### Coming soon: turn the above OmniGraffle diagram into Django code:
+### Turns the above OmniGraffle diagram into the following Django code:
 
      class TestType(models.Model):
          id = models.AutoField()
@@ -44,7 +44,7 @@
          os_type = models.CharField(max_length=200)
          os_version = models.CharField(max_length=200)
          ff_version = models.CharField(max_length=200)
-    
+
      class TestRun(models.Model):
          id = models.AutoField()
          test_type = models.ForeignKey('TestType')
@@ -54,7 +54,8 @@
          total = models.IntegerField()
          duration = models.IntegerField()
 
-### Coming eventually: keep existing diagrams and code in synch.
+
+### Coming soon: keep existing diagrams and code in synch.
 
 ## STATUS
 
@@ -62,7 +63,7 @@
 
 [ ] Update OmniGraffle diagram from Django models code
 
-[-] Create Django models code from OmniGraffle diagram
+[X] Create Django models code from OmniGraffle diagram
 
 [ ] Update Django models code from OmbniGraffle diagram
 
@@ -80,7 +81,7 @@ OmniGraffle
 
 Django
 
- * [http://djangoproject.com](http://djangoproject.com)
+*   [http://djangoproject.com](http://djangoproject.com)
 
 ## RUN
 
@@ -101,15 +102,21 @@ inspector (apple-4) and by hand.
 ## TODO
 
 [x] Add fields to diagram nodes
+
 [x] First pass automatic layout
+
+[ ] Be lenient in what is accepted when loading OmniGraffle files (to 
+    permit users to alter, add notes)
+    
+[ ] More robust, clean errors all over
 
 If requested:
 
 [ ] Remove diN0-specific Django dependencies so people (without sweet
 Django setups) can use this off the shelf
 
-[ ] GUI interface
+[ ] Nice GUI or command-line interface
 
 [ ] other diagram formats
 
-[ ] other code formats?
+[ ] other code formats
