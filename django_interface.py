@@ -20,7 +20,7 @@ class DjangoModelInterface(object):
         # All AObjects created from models in apps
         # model class object -> AObject
         self.AObjects = {}
-        DjangoModelInterface._setup_django_environment()
+        setup_django_environment()
         if apps:
             self.load_models(apps)
     
@@ -65,34 +65,6 @@ class DjangoModelInterface(object):
                 # retrieve class object for class name
                 #model = getattr(app.models, model)
                 fn(model)
-    
-    @classmethod
-    def _setup_django_environment(klass):
-        """ Setup Django environment """
-        # Nearest ancestor directory with a 'settings.py' file
-        settings_dir = klass._find_file_in_ancestors("settings.py")
-        sys.path.append(settings_dir)
-        
-        from django.core.management import setup_environ
-        import settings
-        setup_environ(settings)
-    
-    @classmethod
-    def _find_file_in_ancestors(klass, filename):
-        """
-        For each parent directory, check if 'filename' exists.  If found, return
-        the path; otherwise raise RuntimeError.
-        """
-        import os
-        path = os.path.realpath(os.path.curdir)
-        while not filename in os.listdir(path):
-            #if filename in os.listdir(path):
-            #    return path
-            newpath = os.path.split(path)[0]
-            if path == newpath:
-                raise RuntimeError("No file '%s' found in ancestor directories." % filename)
-            path = newpath
-        return path
 
     def pretty_print(self):
         for m in self.AObjects.values():
@@ -101,4 +73,32 @@ class DjangoModelInterface(object):
                 print "  ", f.name, f.type
                 if f.dest:
                     print "      ", f.dest.name
-        
+
+
+####### DJANGO UTILTIES #######
+
+def setup_django_environment():
+    """ Setup Django environment """
+    # Nearest ancestor directory with a 'settings.py' file
+    settings_dir = _find_file_in_ancestors("settings.py")
+    sys.path.append(settings_dir)
+    
+    from django.core.management import setup_environ
+    import settings
+    setup_environ(settings)
+
+def _find_file_in_ancestors(filename):
+    """
+    For each parent directory, check if 'filename' exists.  If found, return
+    the path; otherwise raise RuntimeError.
+    """
+    import os
+    path = os.path.realpath(os.path.curdir)
+    while not filename in os.listdir(path):
+        #if filename in os.listdir(path):
+        #    return path
+        newpath = os.path.split(path)[0]
+        if path == newpath:
+            raise RuntimeError("No file '%s' found in ancestor directories." % filename)
+        path = newpath
+    return path

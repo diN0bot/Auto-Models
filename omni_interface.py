@@ -27,6 +27,7 @@ class OmniGraffleInterface(object):
         Writes AObjects to OmniGraffle file via appscript
         1. First pass writes object shapes
         2. Second pass writes arrows
+        3. Does layout
         """
         self.og.make(new=appscript.k.document)
         main_doc = self.og.windows.first.get()
@@ -44,6 +45,14 @@ class OmniGraffleInterface(object):
                 if afield.dest:
                     if afield.dest in nodes:
                         self._write_edge(nodes[aobject], nodes[afield.dest])
+        
+        # adjust pages automatically based on node layout
+        main_doc.adjusts_pages.set(True)
+        
+        # set automatic layout
+        main_doc.layout_info.get().type.set(appscript.k.force_directed)
+        #main_doc.layout_info.get().automatic_layout.set(True)
+        self.og.layout(main_doc.graphics)
         
     def update_graffle(self, AObjects, filename):
         """
@@ -102,7 +111,8 @@ class OmniGraffleInterface(object):
         return document.assemble([n_name, n_fields])
     
     def _write_edge(self, aobject_src, aobject_dest):
-        properties = {appscript.k.line_type: appscript.k.curved}
+        properties = {appscript.k.line_type: appscript.k.curved,
+                      appscript.k.tail_type:"FilledArrow"}
         
         self.og.connect(aobject_src,
                         to=aobject_dest, 

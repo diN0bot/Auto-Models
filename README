@@ -22,16 +22,21 @@
 === RUN ===
 
 From command line:
-    cd <Django project>
-    python main.py
-
-OmniGraffle diagram has no layout: objects are on top of each other.
-Use "automatic layout" for initial positioning, then manually reposition
-as necessary.
+    cd <Django project (or some directory inside project)>
+    python main.py <django app name>,<django app2 name>,...
+    
+For example, to create a diagram for the models in apps foo
+and bar, run like so:
+    python main.py foo,bar
+    
+The script does a force-directed layout on the models. This will
+likely need to be tweaked, both through the "Canvas: Diagram Layout"
+inspector (apple-4) and by hand.
 
 === TODO ===
 
 [x] Add fields to diagram nodes
+[x] First pass automatic layout
 
 If requested:
 
