@@ -15,6 +15,14 @@ from omni_interface import OmniGraffleInterface
 import sys
 
 if __name__ == "__main__":
+    """
+    test script:
+    1. loads Django models
+    2. writes OmniGraffle file based on models
+    3. reads back OmniGraffle file
+    4. prints Django classes
+    """
+    
     if len(sys.argv) > 1:
         apps = sys.argv[1].split(',')
     else:
@@ -36,9 +44,14 @@ Please provide comma-separated list of Django apps:
 """
             exit(1)
     
-    dji = DjangoModelInterface(apps)
-    #dji.pretty_print()
+    aobjects = DjangoModelInterface.load_aobjects(apps)
+    #DjangoModelInterface.pretty_print(aobjects)
     
-    omi = OmniGraffleInterface()
-    omi.create_graffle(dji.AObjects.values())
+    ogi = OmniGraffleInterface()
+    ogi.create_graffle(aobjects)
+    
+    # not yet written
+    aobjects2 = ogi.load_aobjects()
+    
+    DjangoModelInterface.create_classes(aobjects)
     

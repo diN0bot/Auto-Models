@@ -73,14 +73,26 @@ class OmniGraffleInterface(object):
         
         #todo
     
+    def load_aobjects(self, filename=None):
+        """
+        
+        """
+        ret = []
+        
+        if filename:
+            self.og.open(filename)
+        main_doc = self.og.windows.first.get()
+        # todo
+        
+        return ret
+    
     def _write_node(self, document, aobject):
         """
         creates two nodes, one for name, one for list of fields,
         and assembles them into a single node group
         @return: group
         """
-        properties = {#appscript.k.url: link,
-                      appscript.k.text: aobject.name,
+        properties = {appscript.k.text: aobject.name,
                       appscript.k.autosizing: appscript.k.full,
                       appscript.k.draws_shadow: True}
         
@@ -88,8 +100,10 @@ class OmniGraffleInterface(object):
                                #at=document.graphics.first, 
                                with_properties=properties)
         
-        properties = {#appscript.k.url: link,
-                      appscript.k.text: '\n'.join([f.name for f in aobject.fields]),
+        field_names = ["%s: %s" % (f.name,
+                                   f.type[:-5] == 'Field' and f.type[:-5]+'F' or f.type) \
+                                   for f in aobject.fields]
+        properties = {appscript.k.text: '\n'.join(field_names),
                       appscript.k.autosizing: appscript.k.full,
                       appscript.k.draws_shadow: True}
         

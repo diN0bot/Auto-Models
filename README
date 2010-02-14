@@ -3,7 +3,7 @@
 
 [x] Create OmniGraffle diagram from Django models code
 [ ] Update OmniGraffle diagram from Django models code
-[ ] Create Django models code from OmniGraffle diagram
+[-] Create Django models code from OmniGraffle diagram
 [ ] Update Django models code from OmbniGraffle diagram
 
 === DEPENDENCIES ===
