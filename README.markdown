@@ -65,7 +65,9 @@
 
 [X] Create Django models code from OmniGraffle diagram
 
-[ ] Update Django models code from OmbniGraffle diagram
+[ ] Update Django models code from OmniGraffle diagram
+
+[ ] Same as above but for SVG or GraphViz's dot format instead of OmniGraffle
 
 ## DEPENDENCIES
 
@@ -120,3 +122,30 @@ Django setups) can use this off the shelf
 [ ] other diagram formats
 
 [ ] other code formats
+
+
+docs
+
+http://developer.apple.com/mac/library/documentation/Cocoa/Conceptual/ObjCTutorial/05View/05View.html#//apple_ref/doc/uid/TP40000863-CH7-SW1
+
+http://developer.apple.com/mac/library/referencelibrary/GettingStarted/Learning_Objective-C_A_Primer/index.html#//apple_ref/doc/uid/TP40007594
+
+http://en.wikipedia.org/wiki/Objective-C
+
+http://developer.apple.com/cocoa/pyobjc.html
+
+http://lethain.com/entry/2008/aug/22/an-epic-introduction-to-pyobjc-and-cocoa/
+
+
+http://github.com/lethain/metawindow/blob/master/MWController.py
+
+http://www.cs.usfca.edu/~jbovet/pyobjc/tutorial/tutorial.html
+
+
+http://scottr.org/blog/2008/jun/11/build-cocoa-guis-python-pyobjc-part-one/
+
+http://scottr.org/blog/2008/jun/11/build-cocoa-guis-python-pyobjc-part-two/
+
+
+http://scottr.org/blog/2008/jun/23/building-cocoa-guis-python-pyobjc-part-three/
+
