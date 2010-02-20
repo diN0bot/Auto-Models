@@ -54,15 +54,17 @@ def create_parser():
                         Models that start with an excludes item are excluded. \
                         eg, --exclude_prefixes=myapp.uninterestingmodels,south")
     
-    commands=("django_to_omni_graffle",
+    commands=("help","-h","--help",
+              "django_to_omni_graffle",
               "d2og",
               "omni_graffle_to_django",
               "og2d")
     parser.add_posarg("command",
                       help="""Type of conversion to perform.
  Should be one of the following:
-    django_to_omni_graffle or d2om: -
-    omni_graffle_to_django or og2d: - 
+    help: prints command line interface usage instructions
+    django_to_omni_graffle or d2om: create omni graffle diagram from django models
+    omni_graffle_to_django or og2d: write django models from omni graffle diagram
     
     Request more commands or vote for these on
         http://github.com/diN0bot/Auto-Models/issues
@@ -97,7 +99,9 @@ def main():
         print include_prefixes
         print exclude_prefixes
 
-    if command in ("django_to_omni_graffle", "d2og"):
+    if command in ("help", "-h", "--help"):
+        parser.print_help()
+    elif command in ("django_to_omni_graffle", "d2og"):
         if verbosity >= 1: print "starting %s..." % command
         aobjects = DjangoModelInterface.load_aobjects(include_prefixes=include_prefixes,
                                                       exclude_prefixes=exclude_prefixes,

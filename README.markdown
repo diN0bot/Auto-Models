@@ -57,17 +57,7 @@
 
 ### Coming soon: keep existing diagrams and code in synch.
 
-## STATUS
-
-[x] Create OmniGraffle diagram from Django models code
-
-[ ] Update OmniGraffle diagram from Django models code
-
-[X] Create Django models code from OmniGraffle diagram
-
-[ ] Update Django models code from OmniGraffle diagram
-
-[ ] Same as above but for SVG or GraphViz's dot format instead of OmniGraffle
+### Coming soon: support for other diagram formats (svg? graphviz/dot?)
 
 ## DEPENDENCIES
 
@@ -77,6 +67,7 @@ OmniGraffle
 *   Mac-only software
 *   requires OmniGraffle
 *   requires appscript, python library for AppleScript
+        sudo easy_install appscript
 *   [http://appscript.sourceforge.net/py-appscript/doc/](http://appscript.sourceforge.net/py-appscript/doc/)
 
     sudo easy_install appscript
@@ -87,19 +78,15 @@ Django
 
 ## RUN
 
-From command line:
+Command line interface:
 
     cd <Django project (or some directory inside project)>
-    python main.py <django app name>,<django app2 name>,...
     
-For example, to create a diagram for the models in apps foo
-and bar, run like so:
-
-    python main.py foo,bar
+    python <path to Auto-Models>/main.py help
     
-The script does a force-directed layout on the models. This will
-likely need to be tweaked, both through the "Canvas: Diagram Layout"
-inspector (apple-4) and by hand.
+When creating OmniGraffle diagrams, the script does a force-directed 
+layout on the models. This will likely need to be tweaked, both 
+through the "Canvas: Diagram Layout" inspector (apple-4) and by hand.
 
 ## TODO
 
@@ -114,38 +101,11 @@ inspector (apple-4) and by hand.
 
 If requested:
 
-[ ] Remove diN0-specific Django dependencies so people (without sweet
+[x] Remove diN0-specific Django dependencies so people (without sweet
 Django setups) can use this off the shelf
 
-[ ] Nice GUI or command-line interface
+[x] Nice GUI or command-line interface
 
-[ ] other diagram formats
+[-] other diagram formats
 
 [ ] other code formats
-
-
-docs
-
-http://developer.apple.com/mac/library/documentation/Cocoa/Conceptual/ObjCTutorial/05View/05View.html#//apple_ref/doc/uid/TP40000863-CH7-SW1
-
-http://developer.apple.com/mac/library/referencelibrary/GettingStarted/Learning_Objective-C_A_Primer/index.html#//apple_ref/doc/uid/TP40007594
-
-http://en.wikipedia.org/wiki/Objective-C
-
-http://developer.apple.com/cocoa/pyobjc.html
-
-http://lethain.com/entry/2008/aug/22/an-epic-introduction-to-pyobjc-and-cocoa/
-
-
-http://github.com/lethain/metawindow/blob/master/MWController.py
-
-http://www.cs.usfca.edu/~jbovet/pyobjc/tutorial/tutorial.html
-
-
-http://scottr.org/blog/2008/jun/11/build-cocoa-guis-python-pyobjc-part-one/
-
-http://scottr.org/blog/2008/jun/11/build-cocoa-guis-python-pyobjc-part-two/
-
-
-http://scottr.org/blog/2008/jun/23/building-cocoa-guis-python-pyobjc-part-three/
-
