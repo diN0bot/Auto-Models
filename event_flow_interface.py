@@ -30,27 +30,27 @@ class EventFlowInterface(object):
                         ">"]
         publish_output_filename = "publish.out"
         publish_command = " ".join(["grep -r dispatcher.publish.Topics %s" % directory] + command_list + [publish_output_filename])
-        self.do_command(publish_command)
-        self.extract_objects_and_arrows(publish_output_filename,
-                                        aobjects,
-                                        visited,
-                                        is_publishing=True)
+        self._do_command(publish_command)
+        self._extract_objects_and_arrows(publish_output_filename,
+                                         aobjects,
+                                         visited,
+                                         is_publishing=True)
 
         register_output_filename = "register.out"
         register_command = " ".join(["grep -r dispatcher.register.Topics %s" % directory] + command_list + [register_output_filename])
-        self.do_command(register_command)
-        self.extract_objects_and_arrows(register_output_filename,
-                                        aobjects,
-                                        visited,
-                                        is_publishing=False)
+        self._do_command(register_command)
+        self._extract_objects_and_arrows(register_output_filename,
+                                         aobjects,
+                                         visited,
+                                         is_publishing=False)
 
         return aobjects.values()
 
-    def extract_objects_and_arrows(self,
-                                   output_filename,
-                                   aobjects,
-                                   visited,
-                                   is_publishing=True):
+    def _extract_objects_and_arrows(self,
+                                    output_filename,
+                                    aobjects,
+                                    visited,
+                                    is_publishing=True):
         # example line
         #/Users/lucy/sandbox/ck/cloudkick/helen/agent_cull_service.py:        dispatcher.publish(Topics.HELEN_NODE_LOOKUP, event, service=SERVICE)
 
@@ -94,10 +94,11 @@ class EventFlowInterface(object):
                 continue
             else:
                 visited[source.name][dest.name] = 1
-                source.add_field(dest.name)
+                afield = source.add_field(dest.name)
+                afield.set_destination(dest)
 
 
-    def do_command(self, command):
+    def _do_command(self, command):
         print
         print "THE COMMAND:"
         print command

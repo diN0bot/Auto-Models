@@ -140,7 +140,7 @@ def main():
             efi.pretty_print(aobjects)
 
         ogi = OmniGraffleInterface()
-        ogi.create_graffle(aobjects)
+        ogi.create_graffle(aobjects, write_fields_in_object=False)
         if verbosity >= 1:
             print "\nSuccessfully created OmniGraffle diagram from internal format"
 
