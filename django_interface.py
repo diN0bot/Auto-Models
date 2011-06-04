@@ -8,19 +8,19 @@ class DjangoModelInterface(object):
     """
     Abstracts Django specific parsing and editing.
     """
-    
+
     def __init__(self):
         raise "Nothing worth instantiating"
-    
+
     @classmethod
     def load_aobjects(klass, include_prefixes=None, exclude_prefixes=None, include_django_contrib=False):
         """
         Loads selected models into AObjects
-        
+
         note: Must be run from within Django project.
         note: In order for all relation edges to be shown,
             all referenced models should be included.
-        
+
         @param include_prefixes: list of module prefixes from which to include models; eg, ['foo', 'bar']
             if specified, other parameters are ignored
         @param exclude_prefixes: list of module prefixes from which to exclude models; eg, ['foo', 'bar']
@@ -41,9 +41,9 @@ class DjangoModelInterface(object):
         obj_dict = {}
         klass._model_iterator(obj_dict, models, klass._first_pass)
         klass._model_iterator(obj_dict, models, klass._second_pass)
-        
+
         return obj_dict.values()
-    
+
     @classmethod
     def _get_models(klass, include_prefixes=None, exclude_prefixes=None, include_django_contrib=False):
         """
@@ -85,7 +85,7 @@ class DjangoModelInterface(object):
         # create AObject for model class
         o = AObject(model.__name__)
         obj_dict[model] = o
-    
+
     @classmethod
     def _second_pass(klass, obj_dict, model):
         """ Second pass sets fields, including ForeignKeys to AObjects """
@@ -99,7 +99,7 @@ class DjangoModelInterface(object):
                 if field.rel.to in obj_dict:
                     f.set_destination(obj_dict[field.rel.to])
             o.add_field(field=f)
-            
+
     @classmethod
     def _model_iterator(klass, obj_dict, models, fn):
         """
@@ -118,12 +118,12 @@ class DjangoModelInterface(object):
         '''
         for model in models:
             fn(obj_dict, model)
-    
+
     @classmethod
     def print_classes(klass, aobjects, filename=None):
         """
-        Convenience function for printing create_classes 
-        
+        Convenience function for printing create_classes
+
         todo see python tokenizer and parser for manipulating code
         http://docs.python.org/library/tokenize.html
         http://docs.python.org/library/parser.html
@@ -135,7 +135,7 @@ class DjangoModelInterface(object):
             f.close()
         else:
             print "\n".join(lines)
-    
+
     @classmethod
     def create_classes(klass, aobjects, filename=None):
         """
@@ -154,20 +154,10 @@ class DjangoModelInterface(object):
                                                          field.type,
                                                          ", ".join(p)))
             lines.append("")
-            
+
             # ToDo: print __unicode__ and Make methods, also class docs (OG notes?)
             # more default fields? what to express in omni graffle, visually v notes
         return lines
-
-    @classmethod
-    def pretty_print(klass, aobjects):
-        for m in aobjects:
-            print m.name
-            for f in m.fields:
-                print "  ", f.name, f.type
-                if f.dest:
-                    print "      ", f.dest.name
-
 
 ####### DJANGO UTILTIES #######
 
@@ -176,7 +166,7 @@ def setup_django_environment():
     # Nearest ancestor directory with a 'settings.py' file
     settings_dir = _find_file_in_ancestors("settings.py")
     sys.path.append(settings_dir)
-    
+
     from django.core.management import setup_environ
     import settings
     setup_environ(settings)

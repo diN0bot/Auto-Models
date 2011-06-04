@@ -10,7 +10,18 @@ Run this script for usage instructions:
 
 from omni_interface import OmniGraffleInterface
 from event_flow_interface import EventFlowInterface
+from dot_interface import DotInterface
 from ext.ArgsParser import ArgsParser
+
+
+def pretty_print(klass, aobjects):
+    for m in aobjects:
+        print m.name
+        for f in m.fields:
+            print "  ", f.name, f.type
+            if f.dest:
+                print "      ", f.dest.name
+
 
 def create_parser():
     """
@@ -54,13 +65,15 @@ def create_parser():
                         Models that start with an excludes item are excluded. \
                         eg, --exclude_prefixes=myapp.uninterestingmodels,south")
 
-    commands = ("help", "-h", "--help",
-              "django_to_omni_graffle",
-              "d2og",
-              "omni_graffle_to_django",
-              "og2d",
-              "event_flow_to_omni_graffle",
-              "ef2og")
+    commands = ("help", " - h", " - -help",
+                "django_to_omni_graffle",
+                "d2og",
+                "omni_graffle_to_django",
+                "og2d",
+                "event_flow_to_omni_graffle",
+                "ef2og",
+                "event_flow_to_dot",
+                "ef2dot")
     parser.add_posarg("command",
                       help="""Type of conversion to perform.
  Should be one of the following:
@@ -68,9 +81,10 @@ def create_parser():
     django_to_omni_graffle or d2om: create omni graffle diagram from django models
     omni_graffle_to_django or og2d: write django models from omni graffle diagram
     event_flow_to_omni_graffle or ef2og: create omni graffle diagram from event flow
+    event_flow_to_dot or ef2dot: create dot diagram from event flow
 
     Request more commands or vote for these on
-        http://github.com/diN0bot/Auto-Models/issues
+        http: // github.com / diN0bot / Auto - Models / issues
     # django_to_dot
     # dot_to_django
     # django_to_svg
@@ -104,45 +118,62 @@ def main():
 
     if command in ("help", "-h", "--help"):
         parser.print_help()
-    elif command in ("django_to_omni_graffle", "d2og"):
+        return
+
+    # do loading portion of command
+    if command.startswith("d2") or command.startswith("django_to_"):
+        # we don't want to load django settings if we don't have to
         from django_interface import DjangoModelInterface
 
         if verbosity >= 1: print "starting %s..." % command
         aobjects = DjangoModelInterface.load_aobjects(include_prefixes=include_prefixes,
                                                       exclude_prefixes=exclude_prefixes,
                                                       include_django_contrib=include_django_contrib)
-        if verbosity >= 0:
-            print "\nSuccessfully loaded Django models into internal format"
-        if verbosity >= 3:
-            DjangoModelInterface.pretty_print(aobjects)
+        successfully_loaded = "Django models"
+        write_fields_in_object = True
 
-        ogi = OmniGraffleInterface()
-        ogi.create_graffle(aobjects)
-        if verbosity >= 1:
-            print "\nSuccessfully created OmniGraffle diagram from internal format"
-
-    elif command in ("omni_graffle_to_django", "og2d"):
+    elif command.startswith("og2") or command.startswith("omgni_graffle_to_"):
         ogi = OmniGraffleInterface()
         aobjects2 = ogi.load_aobjects()
-        if verbosity >= 1:
-            "\nSuccessfully loaded OmniGraffle back into internal format"
-        if verbosity >= 1:
-            "\nWriting Django code from format:\n"
-        DjangoModelInterface.print_classes(aobjects2)
+        successfully_loaded = "OmniGraffle"
 
-    elif command in ("event_flow_to_omni_graffle", "ef2og"):
+    elif command.startswith("ef2") or command.startswith("event_flow_to_"):
+        import config
         efi = EventFlowInterface()
-        aobjects = efi.load_aobjects("~/sandbox/ck/cloudkick")
+        aobjects = efi.load_aobjects(config.EVENT_FLOW_DIRECTORY,
+                                     config.EVENT_SOURCE_REGEX,
+                                     config.EVENT_DEST_REGEX)
+        successfully_loaded = "Event Flow"
+        write_fields_in_object = False
 
-        if verbosity >= 0:
-            print "\nSuccessfully loaded event flow into internal format"
-        if verbosity >= 3:
-            efi.pretty_print(aobjects)
+    # tell the user what happened
+    if verbosity >= 0:
+        print "\nSuccessfully loaded %s into internal format" % successfully_loaded
+    if verbosity >= 3:
+        pretty_print(aobjects)
 
+    # do loading portion of command
+    if command.endswith("2og") or command.endswith("_to_omni_graffle"):
         ogi = OmniGraffleInterface()
-        ogi.create_graffle(aobjects, write_fields_in_object=False)
-        if verbosity >= 1:
-            print "\nSuccessfully created OmniGraffle diagram from internal format"
+        ogi.create_graffle(aobjects,
+                           write_fields_in_object=write_fields_in_object)
+        created = "OmniGraffle diagram"
+
+    elif command.endswith("2d") or command.endswith("_to_django"):
+        DjangoModelInterface.print_classes(aobjects)
+        created = "Django models"
+
+    elif command.endswith("2dot") or command.endswith("_to_dot"):
+        import config
+        config.GENERATED_FILE_DIRECTORY
+        doti = DotInterface("event_flow")
+        doti.create_dotfile(aobjects)
+        doti.create_pdf()
+        created = "Dot diagram"
+
+    if verbosity >= 1:
+        print "\nSuccessfully created %s from internal format" % created
+
 
 if __name__ == "__main__":
     """

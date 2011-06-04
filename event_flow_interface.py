@@ -1,4 +1,4 @@
-from data_structures import *
+from data_structures import AObject, AField
 import subprocess
 import re
 import random
