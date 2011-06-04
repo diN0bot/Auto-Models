@@ -44,7 +44,7 @@ class OmniGraffleInterface(object):
             for afield in aobject.fields:
                 if afield.dest:
                     if afield.dest in nodes:
-                        self._write_edge(nodes[aobject], nodes[afield.dest])
+                        self._write_edge(nodes[aobject], nodes[afield.dest], afield.dest.color)
 
         # adjust pages automatically based on node layout
         main_doc.adjusts_pages.set(True)
@@ -138,7 +138,11 @@ class OmniGraffleInterface(object):
         """
         properties = {appscript.k.text: aobject.name,
                       appscript.k.autosizing: appscript.k.full,
-                      appscript.k.draws_shadow: True}
+                      appscript.k.draws_shadow: True,
+                      #appscript.k.color: (1, 0, 0),
+                      appscript.k.fill_color: aobject.color,
+                      #appscript.k.text_color: (0, 0, 1),
+                      appscript.k.name: aobject.shape}
 
         n_name = document.make(new=appscript.k.shape,
                                #at=document.graphics.first,
@@ -155,14 +159,14 @@ class OmniGraffleInterface(object):
                 type = f.type
             field_names.append("%s: %s" % (f.name, type))
         #field_names = ["%s: %s" % (f.name, type) for f in aobject.fields]
-        properties = {appscript.k.text: '\n'.join(field_names),
-                      appscript.k.autosizing: appscript.k.full,
-                      appscript.k.draws_shadow: True}
+        properties2 = {appscript.k.text: '\n'.join(field_names),
+                       appscript.k.autosizing: appscript.k.full,
+                       appscript.k.draws_shadow: True}
 
         if write_fields_in_object:
             n_fields = document.make(new=appscript.k.shape,
                                    #at=document.graphics.first,
-                                   with_properties=properties)
+                                   with_properties=properties2)
 
             # set widths to be the same
             max_width = max(n_fields.size.get()[0], n_name.size.get()[0])
@@ -179,12 +183,20 @@ class OmniGraffleInterface(object):
         else:
             return n_name
 
-    def _write_edge(self, aobject_src, aobject_dest):
+    def _write_edge(self, og_src, og_dest, color):
+        if color == (1, 1, 1):
+            color = (0, 0, 0)
         properties = {appscript.k.line_type: appscript.k.curved,
-                      appscript.k.tail_type:"FilledArrow"}
+                      appscript.k.tail_type: 0,
+                      appscript.k.head_type:"FilledArrow",
+                      appscript.k.stroke_color: color,
+                      appscript.k.thickness: 5}
 
-        self.og.connect(aobject_src,
-                        to=aobject_dest,
+        #print "og_src", og_src
+        #print "  dest", og_dest
+        #print dir(og_src)
+        self.og.connect(og_src,
+                        to=og_dest,
                         with_properties=properties)
 
 #    og.layout(doc.document.pages.first)

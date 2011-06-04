@@ -8,9 +8,11 @@ class AObject(object):
     An object, aka model or table, with a list of fields
     """
 
-    def __init__(self, name=""):
+    def __init__(self, name="", color=None, shape=None):
         self.name = name
         self.fields = []
+        self.color = color or (1, 1, 1)
+        self.shape = shape or "Rectangle"
 
     def add_field(self, name="", type="", field=None):
         """

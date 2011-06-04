@@ -1,7 +1,7 @@
 from data_structures import *
 import subprocess
 import re
-
+import random
 
 class EventFlowInterface(object):
     """
@@ -9,10 +9,24 @@ class EventFlowInterface(object):
     """
     TOPIC_RE = re.compile("dispatcher.(publish|register).Topics.([A-Z_]+)")
 
+    def _generate_random_color(self, mixr, mixg, mixb):
+        """
+        mix in colors to random color
+        """
+        r = random.random()
+        g = random.random()
+        b = random.random()
+
+        r = (r + mixr) / 2
+        g = (g + mixg) / 2
+        b = (b + mixb) / 2
+
+        return (r, g, b)
+
     def __init__(self):
         pass
 
-    def load_aobjects(self, directory):
+    def load_aobjects(self, directory, source_re, dest_re):
         """
         Loads event dispatch and registration into AObjects
         """
@@ -58,7 +72,8 @@ class EventFlowInterface(object):
         for line in f.readlines():
             parts = line.split()
             # remove .py:
-            filename = parts[0].split("/")[-1][:-4]
+            filename_parts = parts[0].split("/")
+            filename = filename_parts[-2] + "/" + filename_parts[-1][:-4]
             topic = None
             for part in parts:
                 search = EventFlowInterface.TOPIC_RE.search(part)
@@ -71,7 +86,9 @@ class EventFlowInterface(object):
             if filename in aobjects:
                 faobject = aobjects[filename]
             else:
-                faobject = AObject(name=filename)
+                faobject = AObject(name=filename,
+                                   color=self._generate_random_color(1, 1, 1),
+                                   shape="Circle")
                 aobjects[filename] = faobject
                 visited[filename] = {}
 
@@ -94,9 +111,10 @@ class EventFlowInterface(object):
                 continue
             else:
                 visited[source.name][dest.name] = 1
-                afield = source.add_field(dest.name)
-                afield.set_destination(dest)
-
+                afield = AField(name="fieldname",
+                                type="bam",
+                                dest=dest)
+                source.add_field(field=afield)
 
     def _do_command(self, command):
         print
