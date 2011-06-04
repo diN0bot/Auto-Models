@@ -107,25 +107,3 @@ Command line interface:
     
 When creating OmniGraffle diagrams, the script does a force-directed 
 layout on the models.
-
-## TODO
-
-[x] Add fields to diagram nodes
-
-[x] First pass automatic layout
-
-[ ] Be lenient in what is accepted when loading OmniGraffle files (to 
-    permit users to alter, add notes)
-    
-[ ] More robust, clean errors all over
-
-If requested:
-
-[x] Remove diN0-specific Django dependencies so people (without sweet
-Django setups) can use this off the shelf
-
-[x] Nice GUI or command-line interface
-
-[-] other diagram formats
-
-[ ] other code formats
