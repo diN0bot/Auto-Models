@@ -179,8 +179,7 @@ def main():
 
     elif command.endswith("2dot") or command.endswith("_to_dot"):
         import config
-        config.GENERATED_FILE_DIRECTORY
-        doti = DotInterface("event_flow")
+        doti = DotInterface("event_flow", config.GENERATED_FILE_DIRECTORY)
         doti.create_dotfile(aobjects)
         doti.create_pdf()
         created = "Dot diagram"

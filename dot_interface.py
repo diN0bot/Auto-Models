@@ -1,5 +1,7 @@
 import subprocess
 
+import os.path
+
 class DotInterface(object):
     """
     Abstracts dot specific parsing and editing.
@@ -19,8 +21,12 @@ class DotInterface(object):
     }
     '''
 
-    def __init__(self, name):
+    def __init__(self, name, dest_path):
         self.name = name
+        self.dest_path = dest_path
+
+        if not os.path.exists(dest_path):
+            os.mkdir(dest_path)
 
     def create_dotfile(self, AObjects):
         """
@@ -29,7 +35,8 @@ class DotInterface(object):
         2. Second pass writes arrows
         3. Does layout
         """
-        f = open(self.name, 'w')
+        target_path = os.path.join(self.dest_path, self.name)
+        f = open(target_path, 'w')
         f.write("digraph %s {\n\n" % self.name)
         f.write("rankdir=LR;\n\n")
 
@@ -49,7 +56,8 @@ class DotInterface(object):
         f.close()
 
     def create_pdf(self):
-        command = ["dot", "-O", "-Tpdf", self.name]
+        dot_file_path = os.path.join(self.dest_path, self.name)
+        command = ["dot", "-O", "-Tpdf", dot_file_path]
         subprocess.Popen(command)
 
     def _retrieve_color(self, color):
