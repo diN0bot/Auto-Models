@@ -8,7 +8,13 @@ Run this script for usage instructions:
     python <absolute path>/main.py --help
 """
 
-from omni_interface import OmniGraffleInterface
+import sys
+
+try:
+    from omni_interface import OmniGraffleInterface
+except ImportError:
+    OmniGraffleInterface = None
+
 from event_flow_interface import EventFlowInterface
 from dot_interface import DotInterface
 from ext.ArgsParser import ArgsParser
@@ -120,6 +126,14 @@ def main():
         parser.print_help()
         return
 
+    if (command.startswith("og2") or command.startswith("omgni_graffle_to_") or \
+       command.endswith("2og") or command.endswith("_to_omni_graffle")) \
+       and not OmniGraffleInterface:
+       print 'Could not import OmniGraffleInterface, probably ' + \
+             'missing "appscript" package.'
+       print 'You can install it using pip: pip install appscript'
+       sys.exit(1)
+
     # do loading portion of command
     if command.startswith("d2") or command.startswith("django_to_"):
         # we don't want to load django settings if we don't have to
@@ -165,8 +179,7 @@ def main():
 
     elif command.endswith("2dot") or command.endswith("_to_dot"):
         import config
-        config.GENERATED_FILE_DIRECTORY
-        doti = DotInterface("event_flow")
+        doti = DotInterface("event_flow", config.GENERATED_FILE_DIRECTORY)
         doti.create_dotfile(aobjects)
         doti.create_pdf()
         created = "Dot diagram"
