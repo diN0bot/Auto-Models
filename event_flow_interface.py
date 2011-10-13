@@ -7,7 +7,7 @@ class EventFlowInterface(object):
     """
     Abstracts Event Framework parsing.
     """
-    TOPIC_RE = re.compile("dispatcher.(publish|register).Topics.([A-Z_]+)")
+    TOPIC_RE = re.compile("dispatcher.(publish|publish_with_header|register).Topics.([A-Z_]+)")
 
     def _generate_random_color(self, mixr, mixg, mixb):
         """
@@ -43,7 +43,7 @@ class EventFlowInterface(object):
                         "grep -v tests.py",
                         ">"]
         publish_output_filename = "publish.out"
-        publish_command = " ".join(["grep -r dispatcher.publish.Topics %s" % directory] + command_list + [publish_output_filename])
+        publish_command = " ".join(["grep -r dispatcher.publish(_with_header)?.Topics %s" % directory] + command_list + [publish_output_filename])
         self._do_command(publish_command)
         self._extract_objects_and_arrows(publish_output_filename,
                                          aobjects,
